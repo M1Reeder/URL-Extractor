@@ -133,7 +133,7 @@ public class URLDataStore {
 				pStmt.setString(2, "olympics2012");
 				pStmt.setInt(3, urlModel.getPopularityCount());
 				pStmt.setString(4, urlModel.getHtmlTitle());
-				pStmt.setString(5, "http://image/url");
+				pStmt.setString(5, urlModel.getImageURL().toString());
 				pStmt.setString(6, urlModel.getHtmlContent());
 				pStmt.executeUpdate();
 				System.out.println(urlModel.toString());
@@ -165,6 +165,42 @@ public class URLDataStore {
 		return urlModels;
 	}
 
+        public ArrayList<String> getRawTweets() throws SQLException{
+            ArrayList<String> tweetList = new ArrayList<String>();
+            ArrayList<String> idList = new ArrayList<String>();
+            Statement stmt = con.createStatement();
+            String query = "SELECT tweet FROM twitterdata LIMIT 300";
+            String idQuery = "SELECT id FROM twitterdata LIMIT 300";
+            
+            ResultSet result = stmt.executeQuery(query);
+            while(result.next()){
+                tweetList.add(result.getString("tweet"));
+            }
+            
+            ArrayList<URL> urlFromTweets = new ArrayList<URL>();
+            RegexURLExtractor extractor = new RegexURLExtractor();
+            
+            for(String s: tweetList){
+                urlFromTweets.add(extractor.extract(s));
+            }
+            for(URL url: urlFromTweets){ //get all of the long urls
+                url = 
+            }
+            
+            
+            result = stmt.executeQuery(idQuery);
+            while(result.next()){
+                idList.add(result.getString("id"));
+            }
+            
+            for(int i=0; i<idList.size(); i++){
+                insertURL(urlFromTweets.get(i).toString(),idList.get(i));
+            }
+            
+            return tweetList;
+            
+        }
+        
 	public static void main(String[] args) {
 		URLDataStore dataStore = new URLDataStore();
 		//dataStore.insertURL("http://news.carbon-future.co.uk/archives/42856", "224267191476953089");

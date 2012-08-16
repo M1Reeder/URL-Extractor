@@ -2,9 +2,8 @@ package org.knoesis.url.extractions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import org.knoesis.url.extractions.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.knoesis.utils.TermFrequencyGenerator;
 /**
  * This class should be called instead of just the URL Extractor to collect all the 
@@ -35,9 +34,11 @@ public class URLInformationAssembler implements Extractor<Boolean> {
 
 	public URLInformationAssembler(){
 		urlContentExtractors = new ArrayList<Extractor>();
+                urlContentExtractors.add(new RegexURLExtractor());
 		urlContentExtractors.add(new APIURLResolver());
 		urlContentExtractors.add(new HtmlTitleExtractor());
 		urlContentExtractors.add(new BoilerplateHTMLExtractor());
+                urlContentExtractors.add(new ImageURLExtractor());
 		//urlContentExtractors.add(new DBpediaSpotlightExtractor());
 		urlContentExtractors.add(new TermFrequencyGenerator());
 	}
@@ -66,6 +67,7 @@ public class URLInformationAssembler implements Extractor<Boolean> {
 			}
 		}catch(NullPointerException e){
 			//skipping if the url cant be processed.
+                        Logger.getLogger(URLInformationAssembler.class.getName()).log(Level.WARNING, "Couldn't process URL" + urlModel.getShortURL(), e);
 			urlModel = null;
 		}
 	}

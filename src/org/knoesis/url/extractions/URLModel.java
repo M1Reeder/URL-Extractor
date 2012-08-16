@@ -22,6 +22,7 @@ public class URLModel implements Serializable{
 	private String urlTweet;
 	private URL shortURL;
 	private URL originalURL;
+        private URL imageURL;
 	private String htmlContent; 
 	private Set<String> entities;
 	private String htmlTitle;
@@ -64,7 +65,13 @@ public class URLModel implements Serializable{
 	public void setShortURL(URL shortURL) {
 		this.shortURL = shortURL;
 	}
-	
+	public URL getImageURL(){
+            return imageURL;
+        }
+        public void setImageURL(URL imageURL){
+            this.imageURL = imageURL;
+        }
+        
 	/**
 	 * toString() method overriden with returning the originalURL as a string
 	 */
@@ -79,6 +86,7 @@ public class URLModel implements Serializable{
 		//result+= "Content: " +htmlContent + "\n";
 		//result+= "Entities: "+entities+"\n";
 		result+= "Similarity: "+similarityId+"\n";
+                result+= "Image URL: "+imageURL+"\n";
 		return result;
 		
 	}
@@ -99,12 +107,13 @@ public class URLModel implements Serializable{
 		JSONObject returnResult = new JSONObject();
 		JSONObject result = new JSONObject();
 		JSONArray entities = new JSONArray();
-		for(String dbEntity: this.entities){
-			entities.put(dbEntity);
-		}
+//		for(String dbEntity: this.entities){
+//			entities.put(dbEntity);
+//		}
 		try {
 			result.put("originalURL", this.originalURL);
 			result.put("entities", entities);
+                        result.put("ImageURL", this.getImageURL());
 			if(heading)
 				result.put("title", this.htmlTitle);
 			if(html)

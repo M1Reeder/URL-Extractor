@@ -5,12 +5,16 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URLDecoder;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.knoesis.url.extractions.URLDataStore;
 
 import org.knoesis.url.extractions.URLInformationAssembler;
 import org.knoesis.url.extractions.URLModel;
@@ -82,11 +86,20 @@ public class URLExtractionServlet extends HttpServlet {
 	}
 
 	public static void main(String[] args) {
-		String tweet = "Infor's cloud and mobile strategies j.mp/IqYdfV <- good stuff from Dennis Howlett... #cloudcomputing";  
+		String tweet = "Five of our @PlanetaryRsrcs engineers designed and helped build the @MarsCuriosity rover. Here's their next mission: http://ow.ly/cXYSJ";  
 		URLModel urlModel = new URLModel(tweet);
 		URLInformationAssembler assembler = new URLInformationAssembler();
 		assembler.process(urlModel);
 		System.out.println(urlModel.jsonSerialize(true, false, true, true));
+                
+                URLDataStore ds = new URLDataStore();
+        try {
+            ds.getRawTweets();
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(URLExtractionServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 }
